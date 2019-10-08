@@ -41,11 +41,11 @@ void MinimumJerk::calcCoefficient(WayPoint start,
       3 * pow(move_time, 2), 4 * pow(move_time, 3), 5 * pow(move_time, 4),
       6 * pow(move_time, 1), 12 * pow(move_time, 2), 20 * pow(move_time, 3);
 
-  coefficient_(0) = start.position;
+  coefficient_(0) = start.effort;
   coefficient_(1) = start.velocity;
   coefficient_(2) = 0.5 * start.acceleration;
 
-  b << (goal.position - start.position - (start.velocity * move_time + 0.5 * start.acceleration * pow(move_time, 2))),
+  b << (goal.effort - start.effort),
       (goal.velocity - start.velocity - (start.acceleration * move_time)),
       (goal.acceleration - start.acceleration);
 
@@ -96,11 +96,11 @@ std::vector<WayPoint> JointTrajectory::getJointWayPoint(double tick)
   for (uint8_t index = 0; index < joint_num_; index++)
   {
     WayPoint single_joint_way_point;
-    single_joint_way_point.position = 0.0;
+    single_joint_way_point.effort = 0.0;
     single_joint_way_point.velocity = 0.0;
     single_joint_way_point.acceleration = 0.0;
 
-    single_joint_way_point.position = coefficient_(0, index) +
+    single_joint_way_point.effort = coefficient_(0, index) +
              coefficient_(1, index) * pow(tick, 1) +
              coefficient_(2, index) * pow(tick, 2) +
              coefficient_(3, index) * pow(tick, 3) +
